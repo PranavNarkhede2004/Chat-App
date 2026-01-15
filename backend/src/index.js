@@ -18,11 +18,23 @@ const __dirname = path.resolve();
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5000",
+  "https://chat-app-gamma-rouge.vercel.app",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production" 
-      ? process.env.CLIENT_URL || "https://chat-app-d1yu.onrender.com"
-      : "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (process.env.NODE_ENV === "development" || !origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );

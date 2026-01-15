@@ -7,9 +7,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === "production" 
-      ? [process.env.CLIENT_URL || "https://chat-app-d1yu.onrender.com"]
-      : ["http://localhost:5173", "http://localhost:5000"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5000",
+      "https://chat-app-gamma-rouge.vercel.app",
+      process.env.CLIENT_URL,
+    ].filter(Boolean),
     methods: ["GET", "POST"],
     credentials: true,
   },
